@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#171717" />
+<title>Lead Your Way   Leadership Dilemmas</title>
+<style>
+  :root {
+    --bg: #111111;
+    --panel: #1b1b1b;
+    --panel-2: #242424;
+    --text: #f5f0e8;
+    --muted: #b7b0a7;
+    --red: #e5392f;
+    --red-dark: #9f211c;
+    --line: rgba(255,255,255,.12);
+    --good: #a7d7b5;
+    --radius: 22px;
+  }
+  * { box-sizing: border-box; }
+  html { min-height: 100%; background: var(--bg); }
+  body {
+    margin: 0; color: var(--text); background:
+      radial-gradient(ellipse at 90% 0%, rgba(229,57,47,.15), transparent 34rem),
+      var(--bg);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    min-height: 100dvh; line-height: 1.5;
+  }
+  button { font: inherit; }
+  .app { width: min(100%, 560px); min-height: 100dvh; margin: 0 auto; padding: 20px 18px calc(28px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; }
+  .top { display:flex; align-items:center; justify-content:space-between; gap:12px; padding: 6px 0 20px; }
+  .brand { display:flex; align-items:center; gap:10px; font-size:12px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; }
+  .mark { width:30px; height:30px; display:grid; place-items:center; background:var(--red); color:white; border-radius:9px; font-size:16px; transform:rotate(-5deg); }
+  .tag { color:var(--muted); font-size:11px; border:1px solid var(--line); border-radius:999px; padding:6px 10px; white-space:nowrap; }
+  .screen { flex:1; display:flex; flex-direction:column; animation: enter .22s ease-out; }
+  @keyframes enter { from { opacity:.4; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+  .eyebrow { color:var(--red); font-weight:900; text-transform:uppercase; letter-spacing:.15em; font-size:11px; margin: 12px 0 10px; }
+  h1 { font-size: clamp(34px, 9vw, 48px); line-height:1.03; letter-spacing:-.055em; margin:0 0 16px; font-weight:900; }
+  h2 { font-size: clamp(25px, 7vw, 32px); line-height:1.12; letter-spacing:-.04em; margin:0 0 14px; }
+  p { color:var(--muted); margin:0 0 16px; font-size:15px; }
+  .highlight { color:var(--text); }
+  .hero-card, .scenario-card, .feedback, .result-card { background:linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.02)); border:1px solid var(--line); border-radius:var(--radius); padding:22px; }
+  .hero-card { margin: 18px 0 22px; position:relative; overflow:hidden; }
+  .hero-card:after { content:""; position:absolute; width:150px; height:150px; right:-58px; bottom:-80px; background:var(--red); filter:blur(60px); opacity:.25; }
+  .quote { font-size:20px; line-height:1.35; font-weight:750; color:var(--text); position:relative; z-index:1; }
+  .subquote { font-size:13px; margin-top:12px; color:var(--muted); position:relative; z-index:1; }
+  .primary, .secondary { width:100%; min-height:54px; border-radius:15px; padding:14px 18px; border:0; cursor:pointer; font-weight:850; transition:transform .12s ease, background .12s ease; }
+  .primary { background:var(--red); color:#fff; box-shadow:0 8px 22px rgba(229,57,47,.18); }
+  .primary:active, .option:active { transform:scale(.99); }
+  .secondary { background:transparent; color:var(--text); border:1px solid var(--line); margin-top:10px; }
+  .note { font-size:12px; color:var(--muted); text-align:center; margin-top:14px; }
+  .progress-wrap { margin: 4px 0 22px; }
+  .progress-meta { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; margin-bottom:9px; }
+  .track { height:5px; background:#333; border-radius:999px; overflow:hidden; }
+  .bar { height:100%; width:0%; background:var(--red); border-radius:999px; transition:width .25s ease; }
+  .scenario-card { padding:22px 18px 18px; }
+  .scenario-number { display:inline-flex; align-items:center; gap:7px; color:var(--red); font-size:11px; font-weight:900; letter-spacing:.13em; text-transform:uppercase; margin-bottom:13px; }
+  .scenario-number span { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--red); }
+  .context { color:#d2ccc4; font-size:15px; margin-bottom:0; }
+  .options { display:grid; gap:10px; margin:16px 0 0; }
+  .option { display:flex; align-items:flex-start; gap:12px; text-align:left; width:100%; border:1px solid var(--line); background:var(--panel); color:var(--text); border-radius:16px; padding:15px 13px; min-height:64px; cursor:pointer; transition:border-color .15s, background .15s, transform .12s; }
+  .option:hover { border-color:rgba(229,57,47,.75); background:var(--panel-2); }
+  .letter { flex:0 0 27px; height:27px; display:grid; place-items:center; border-radius:9px; background:#303030; color:#fff; font-size:12px; font-weight:900; }
+  .option-text { font-size:14px; line-height:1.4; font-weight:650; padding-top:3px; }
+  .option:disabled { cursor:default; opacity:.7; }
+  .option.chosen { border-color:var(--red); background:rgba(229,57,47,.1); opacity:1; }
+  .option.chosen .letter { background:var(--red); }
+  .feedback { margin-top:14px; padding:18px; border-color:rgba(229,57,47,.35); }
+  .feedback h3 { margin:0 0 7px; font-size:15px; }
+  .feedback p { font-size:14px; margin:0; color:#d6d0c8; }
+  .reflection { color:var(--text)!important; font-weight:750; margin-top:12px!important; }
+  .hidden { display:none!important; }
+  .result-card { margin:18px 0; }
+  .result-label { color:var(--red); font-size:11px; text-transform:uppercase; letter-spacing:.15em; font-weight:900; margin-bottom:12px; }
+  .final-quote { font-size:25px; font-weight:900; letter-spacing:-.035em; line-height:1.18; margin-bottom:16px; }
+  .divider { height:1px; background:var(--line); margin:18px 0; }
+  .small { font-size:13px; }
+  .footer { color:#77716b; text-align:center; font-size:11px; margin-top:26px; }
+  @media (min-width: 500px) { .app { padding-top:28px; } .scenario-card { padding:25px; } .option { padding:16px; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none!important; transition:none!important; } }
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div class="brand"><span class="mark">↗</span><span>Lead Your Way</span></div>
+    <div class="tag">MM leadership session</div>
+  </header>
+
+  <section id="intro" class="screen">
+    <div class="eyebrow">Leadership dilemmas</div>
+    <h1>What do your people <span style="color:var(--red)">need from you?</span></h1>
+    <p>Choose what you'd do in each situation. No scores. No leadership types.</p>
+    <div class="hero-card">
+      <div class="quote">“Leadership isn't about being the best leader.”</div>
+      <div class="subquote">It's about learning to lead the people in front of you.</div>
+    </div>
+    <button class="primary" id="startBtn">Start <span aria-hidden="true">→</span></button>
+    <div class="note">10 situations · 4 choices each</div>
+  </section>
+
+  <section id="quiz" class="screen hidden" aria-live="polite">
+    <div class="progress-wrap">
+      <div class="progress-meta"><span id="progressLabel">SCENARIO 1 OF 10</span><span id="progressPercent">10%</span></div>
+      <div class="track"><div class="bar" id="progressBar"></div></div>
+    </div>
+    <div class="scenario-card">
+      <div class="scenario-number"><span></span><span id="scenarioCategory">Engagement</span></div>
+      <h2 id="scenarioTitle"></h2>
+      <p class="context" id="scenarioContext"></p>
+    </div>
+    <div class="options" id="options"></div>
+    <div class="feedback hidden" id="feedback">
+      <h3 id="feedbackTitle">Consider the trade-off</h3>
+      <p id="feedbackText"></p>
+      <p class="reflection" id="reflectionText"></p>
+    </div>
+    <button class="primary hidden" id="nextBtn" style="margin-top:14px">Next scenario →</button>
+
+  </section>
+
+  <section id="result" class="screen hidden">
+    <div class="eyebrow">Take this with you</div>
+    <h1>Lead your <span style="color:var(--red)">way.</span></h1>
+    <div class="result-card">
+      <div class="final-quote">Leadership isn't about being the best leader. It's about becoming the leader your people need.</div>
+      <p class="highlight">Be yourself. Understand your people. Adapt your approach, not your standards.</p>
+    </div>
+    <button class="primary" id="restartBtn">Start again</button>
+    <button class="secondary" id="reviewBtn">Review my choices</button>
+    <div id="review" class="hidden" style="margin-top:14px"></div>
+  </section>
+</main>
+
+<script>
+const scenarios = [
+  {
+    category: "Engagement",
+    title: "A member suddenly goes quiet.",
+    context: "They used to contribute actively. Now they miss touchpoints, reply late, and their performance is dropping. What do you do first?",
+    options: [
+      { text: "Have a private conversation to understand what changed.", feedback: "A conversation can reveal context you can't see from performance alone. The important part is to listen without deciding in advance what the problem is.", reflection: "Am I curious about their situation or already convinced I know the reason?" },
+      { text: "Set clear expectations and explain what needs to improve.", feedback: "Clear expectations matter, especially if the team is affected. But if you skip understanding what changed, you may address the visible symptom rather than the cause.", reflection: "What do I need to understand before deciding what accountability looks like?" },
+      { text: "Give them space and see whether they recover on their own.", feedback: "Space can show trust and avoid unnecessary pressure. But silence can also be experienced as absence, particularly if the person is struggling.", reflection: "How will I know whether space is helping or whether I'm simply avoiding the conversation?" },
+      { text: "Check in more often and help them get back on track.", feedback: "More support may help, but it can also feel like micromanagement if the person needs autonomy. First find out what kind of support would actually be useful.", reflection: "Am I offering the support they need or the support I would want?" }
+    ]
+  },
+  {
+    category: "Ownership",
+    title: "Your team only moves when you push.",
+    context: "Tasks get done, but only after repeated reminders. When you stop checking, progress slows down. What would you do?",
+    options: [
+      { text: "Create a stricter follow-up system with deadlines.", feedback: "Structure can make responsibilities visible and reduce confusion. But more reminders may reinforce the idea that the leader owns the team's progress.", reflection: "Am I building accountability or making myself the team's reminder system?" },
+      { text: "Give members ownership of their tasks and ask them to propose their follow-up plan.", feedback: "Ownership grows when people help shape how they deliver. It still needs clear expectations and follow-through; delegation alone won't solve every issue.", reflection: "Have I made ownership real, or only transferred tasks?" },
+      { text: "Take over the urgent tasks so the team reaches its target.", feedback: "Taking over may protect a short-term result. Repeatedly doing so can hide the underlying issue and leave members with fewer chances to grow.", reflection: "What will happen the next time the same problem appears?" },
+      { text: "Ask the team what is blocking progress before changing the process.", feedback: "This helps distinguish unclear priorities, lack of confidence, capacity issues, and low accountability. Listening is useful when it leads to a clear next step.", reflection: "After listening, how will I decide what needs to change?" }
+    ]
+  },
+  {
+    category: "Accountability",
+    title: "A member keeps promising to improve.",
+    context: "They apologize after every missed deadline and genuinely sound committed, but the same pattern keeps happening. What next?",
+    options: [
+      { text: "Give them another chance because they seem sincere.", feedback: "Sincerity matters, but good intentions don't automatically solve repeated missed commitments. Support needs to be paired with a concrete plan.", reflection: "What evidence would show that the situation is actually changing?" },
+      { text: "Have a direct conversation about the pattern and its impact.", feedback: "Naming the pattern clearly can make the conversation fairer than building up frustration silently. Stay specific, hear their perspective, and agree on next steps.", reflection: "Can I be direct without humiliating or labelling the person?" },
+      { text: "Reduce their responsibilities until they prove they can deliver.", feedback: "Adjusting responsibility may protect the team and create a manageable path forward. Explain the reason and define what rebuilding trust would look like.", reflection: "Is this a fair adjustment, and have I explained the path forward?" },
+      { text: "Do the task yourself this time to avoid another delay.", feedback: "That may solve today's deadline, but it can also conceal the recurring issue and increase dependence on you. If you step in, still address the pattern.", reflection: "Am I solving an urgent problem while leaving the real problem untouched?" }
+    ]
+  },
+  {
+    category: "Different needs",
+    title: "Two members need different things from you.",
+    context: "One asks for frequent feedback. Another performs well independently and dislikes constant check-ins. How do you manage them?",
+    options: [
+      { text: "Use the same check-in schedule to treat both fairly.", feedback: "Consistency can make expectations transparent, but identical support doesn't always meet different needs. Fairness also means checking whether the arrangement works.", reflection: "Am I confusing treating people equally with supporting them fairly?" },
+      { text: "Agree on a different check-in rhythm with each person.", feedback: "Different rhythms can support both autonomy and guidance. Make sure expectations and outcomes remain clear, and revisit the arrangement if needs change.", reflection: "What evidence tells me this difference is based on need rather than preference?" },
+      { text: "Give the independent member full freedom and focus on the other.", feedback: "Autonomy can be appropriate, but independence doesn't mean a person never needs support. Avoid turning a current preference into a permanent assumption.", reflection: "Am I still available without unnecessarily interfering?" },
+      { text: "Ask both members what kind of support helps them work best.", feedback: "Asking avoids guessing and gives members a voice in the working relationship. You still need to balance preferences with team needs and responsibilities.", reflection: "How can I respect preferences while keeping expectations consistent?" }
+    ]
+  },
+  {
+    category: "Disagreement",
+    title: "A member challenges you in front of the team.",
+    context: "They disagree with your decision during a meeting. Their point may be valid, but the discussion is disrupting progress. What do you do?",
+    options: [
+      { text: "Defend your decision immediately so the team stays aligned.", feedback: "A clear decision can help the team move forward. But reacting defensively may silence useful information and make disagreement feel unsafe.", reflection: "Am I protecting the team's direction or protecting my ego?" },
+      { text: "Invite them to explain their concern briefly, then decide the next step.", feedback: "This can preserve space for dissent without allowing the meeting to stall. You can hear the concern, clarify the decision, and agree where further discussion belongs.", reflection: "Can I stay open to being wrong while still taking responsibility for a decision?" },
+      { text: "Pause the discussion and speak with them privately afterward.", feedback: "A private conversation can help when emotions are rising. But if the concern affects the whole team, make sure the relevant clarification reaches everyone too.", reflection: "What does the team need to understand now, and what can wait?" },
+      { text: "Let the team discuss both positions and decide together.", feedback: "Shared discussion can improve decisions when the team has the time and authority to decide. It can also create confusion if the decision owner isn't clear.", reflection: "Who owns this decision, and how much participation is useful here?" }
+    ]
+  },
+  {
+    category: "Potential",
+    title: "A capable member works differently from you.",
+    context: "They have strong potential, but their working style frustrates you. You would approach the task very differently. What do you do?",
+    options: [
+      { text: "Show them your method because you know it works.", feedback: "Sharing a proven method can help when quality or clarity is at risk. But your preferred method isn't automatically the only effective one.", reflection: "Is their approach failing or simply different from mine?" },
+      { text: "Agree on the outcome and let them choose their method.", feedback: "Clear outcomes with flexibility can build ownership. This works best when constraints, deadlines, and quality expectations are explicit.", reflection: "What must be consistent, and where can I allow freedom?" },
+      { text: "Observe their approach and give specific feedback afterward.", feedback: "Observation can help you assess results before intervening. Feedback is most useful when it refers to evidence and impact, not personal preference.", reflection: "Am I evaluating the work against standards or against my habits?" },
+      { text: "Move the task to someone whose style fits yours better.", feedback: "Reassigning can sometimes be necessary, but doing it because someone works differently may waste potential and reinforce your own blind spots.", reflection: "Am I solving a genuine performance issue or avoiding the discomfort of difference?" }
+    ]
+  },
+  {
+    category: "Delegation",
+    title: "The task is important, and you're faster at it.",
+    context: "A deadline is close. A member could do the task, but you'll probably do it faster and with fewer mistakes. What do you choose?",
+    options: [
+      { text: "Do it yourself to protect the result.", feedback: "There are moments when direct intervention is justified. If this becomes the default, though, the team may never develop the ability to deliver without you.", reflection: "Is this a genuine exception or a pattern I keep repeating?" },
+      { text: "Delegate a manageable part and agree on a checkpoint.", feedback: "A bounded task with a clear checkpoint can balance delivery risk with learning. It takes some time upfront but may build future capacity.", reflection: "What can I delegate safely without abandoning the person?" },
+      { text: "Delegate the whole task and let the member learn through ownership.", feedback: "Full ownership can be developmental when the person has enough context and the risk is acceptable. Without support or clarity, it may set them up to fail.", reflection: "Does this person have the tools and clarity to succeed?" },
+      { text: "Work together and explain how you make the key decisions.", feedback: "Working together can transfer knowledge while protecting quality. Be careful not to take over so completely that the member becomes only an observer.", reflection: "Am I coaching them to do it or doing it while they watch?" }
+    ]
+  },
+  {
+    category: "Recognition",
+    title: "Your most reliable member is becoming distant.",
+    context: "They deliver consistently and rarely ask for help, but they participate less and seem less connected to the team. What do you do?",
+    options: [
+      { text: "Focus on their strong performance; don't create a problem.", feedback: "Respecting someone's space is important, and distance doesn't automatically mean something is wrong. Still, performance alone may not tell you how their experience is going.", reflection: "What signals am I ignoring because the results still look good?" },
+      { text: "Check in privately and ask how their experience has been lately.", feedback: "A genuine check-in can uncover needs or changes without assuming the person is disengaged. Make room for an honest answer, even if it is uncomfortable.", reflection: "Can I listen without immediately trying to fix or defend something?" },
+      { text: "Give them a new responsibility to make the experience exciting again.", feedback: "A new challenge can help if they want growth, but it may add work to someone who is already tired or looking for something else.", reflection: "Have I asked what they need before deciding what to offer?" },
+      { text: "Invite them to share feedback about the team and your leadership.", feedback: "Asking for feedback makes it easier to surface issues that performance metrics won't reveal. Be ready to hear criticism without making the person responsible for reassuring you.", reflection: "What would I do if their feedback challenged how I see myself?" }
+    ]
+  },
+  {
+    category: "Team conflict",
+    title: "Two members blame each other.",
+    context: "A shared task is late. Each person says the other caused the delay. You need to get the work moving and understand what happened. What's your first move?",
+    options: [
+      { text: "Identify who was responsible and address that person first.", feedback: "Clear responsibility matters, but deciding too early can lock you into one version of events. Establish the facts and handoffs before assigning blame.", reflection: "Have I heard enough to distinguish responsibility from assumption?" },
+      { text: "Bring them together to clarify the handoff and agree on next steps.", feedback: "A joint conversation can reveal gaps in coordination and establish shared clarity. If there's a power imbalance or serious conflict, separate conversations may be needed first.", reflection: "What process or expectation allowed this confusion to happen?" },
+      { text: "Take control of the task and finish it yourself.", feedback: "Taking control may protect the immediate deadline, but it won't necessarily repair the working relationship or prevent recurrence.", reflection: "What needs to happen after the deadline so this doesn't repeat?" },
+      { text: "Speak with each person separately before deciding what to do.", feedback: "Separate conversations can help you hear both perspectives and reduce defensiveness. Make sure the process leads to a clear shared plan, not endless investigation.", reflection: "How will I move from hearing both sides to a fair decision?" }
+    ]
+  },
+  {
+    category: "Growth",
+    title: "A member asks for more responsibility but isn't ready yet.",
+    context: "They want to lead a bigger task, but they've struggled with some current responsibilities. You don't want to discourage them or set them up to fail. What do you do?",
+    options: [
+      { text: "Say no until they consistently meet current expectations.", feedback: "Readiness and reliability matter. A flat refusal without a path forward can make development feel closed off rather than achievable.", reflection: "Have I explained what readiness looks like and how they can demonstrate it?" },
+      { text: "Give them the bigger task to show you trust them.", feedback: "Trust can be motivating, but stretching someone without the right support can create avoidable failure for them and the team.", reflection: "What level of risk and support makes this a fair opportunity?" },
+      { text: "Agree on a smaller stretch task with clear support and success criteria.", feedback: "A manageable stretch can create evidence of readiness while preserving ownership. Be clear about what they own and when you'll review progress.", reflection: "Am I creating a real growth opportunity or just giving them more work?" },
+      { text: "Ask what they want to learn, then build a development path together.", feedback: "A shared plan connects ambition to specific skills and evidence. It should lead to an opportunity to practise, not become an endless conversation.", reflection: "What is the next concrete step that lets them grow?" }
+    ]
+  }
+];
+
+let index = 0;
+let answers = [];
+let locked = false;
+const $ = id => document.getElementById(id);
+const intro = $("intro"), quiz = $("quiz"), result = $("result");
+function show(el) { [intro, quiz, result].forEach(s => s.classList.add("hidden")); el.classList.remove("hidden"); }
+function renderScenario() {
+  locked = false;
+  const s = scenarios[index];
+  $("progressLabel").textContent = `SCENARIO ${index + 1} OF ${scenarios.length}`;
+  $("progressPercent").textContent = `${Math.round(((index + 1) / scenarios.length) * 100)}%`;
+  $("progressBar").style.width = `${((index + 1) / scenarios.length) * 100}%`;
+  $("scenarioCategory").textContent = s.category;
+  $("scenarioTitle").textContent = s.title;
+  $("scenarioContext").textContent = s.context;
+  $("options").innerHTML = "";
+  $("feedback").classList.add("hidden");
+  $("nextBtn").classList.add("hidden");
+  s.options.forEach((o, i) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerHTML = `<span class="letter">${String.fromCharCode(65+i)}</span><span class="option-text"></span>`;
+    btn.querySelector(".option-text").textContent = o.text;
+    btn.addEventListener("click", () => choose(i, btn));
+    $("options").appendChild(btn);
+  });
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+function choose(choice, btn) {
+  if (locked) return;
+  locked = true;
+  answers[index] = choice;
+  [...$("options").children].forEach(b => { b.disabled = true; });
+  btn.classList.add("chosen");
+  const o = scenarios[index].options[choice];
+  $("feedbackText").textContent = o.feedback;
+  $("reflectionText").textContent = o.reflection;
+  $("feedback").classList.remove("hidden");
+  $("nextBtn").textContent = index === scenarios.length - 1 ? "See the final message →" : "Next scenario →";
+  $("nextBtn").classList.remove("hidden");
+  setTimeout(() => $("feedback").scrollIntoView({behavior:"smooth", block:"nearest"}), 80);
+}
+function start() { index = 0; answers = []; show(quiz); renderScenario(); }
+$("startBtn").addEventListener("click", start);
+$("nextBtn").addEventListener("click", () => {
+  if (index < scenarios.length - 1) { index++; renderScenario(); }
+  else { show(result); window.scrollTo({top:0, behavior:"smooth"}); }
+});
+$("restartBtn").addEventListener("click", start);
+$("reviewBtn").addEventListener("click", () => {
+  const review = $("review");
+  if (!review.classList.contains("hidden")) { review.classList.add("hidden"); $("reviewBtn").textContent = "Review my choices"; return; }
+  review.innerHTML = "";
+  scenarios.forEach((s, i) => {
+    const card = document.createElement("div");
+    card.className = "feedback";
+    card.style.marginTop = "10px";
+    const heading = document.createElement("h3");
+    heading.textContent = `${i+1}. ${s.title}`;
+    const answer = document.createElement("p");
+    answer.textContent = `Your choice: ${s.options[answers[i] ?? 0].text}`;
+    card.append(heading, answer);
+    review.appendChild(card);
+  });
+  review.classList.remove("hidden");
+  $("reviewBtn").textContent = "Hide my choices";
+});
+</script>
+</body>
+</html>
